@@ -20,11 +20,30 @@ class Application(tornado.web.Application):  # 继承原本的类方法
             (r"/post/(?P<post_id>[0-9]+)",PostHandler),
             (r'/register',RegisterHandler),
             (r'/login',LoginHandler),
+            (r'/update',UpdateHandler),
 
         ]
         settings = dict(
             debug=True,
-            template_path="templates"
+            static_path = "static",
+            template_path="templates",
+            xsrf_cookies=True,
+            cookie_secret="casnujkbvnoids-savnijknio",
+            pycket={
+                'engine': 'redis',
+                'storage': {
+                    'host': '127.0.0.1',
+                    'port': 6379,
+                    'db_sessions': 7,  # 选择数据库号
+                    'max_connections': 2 ** 31,
+                },
+                'cookies': {
+                    # 设置过期时间
+                    'expires_days': 1,  # 天数
+                    # 'expires':None, #秒
+                },
+            },
+            login_url="/login"
         )
         super().__init__(handlers,**settings)
 

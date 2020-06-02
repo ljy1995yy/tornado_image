@@ -26,7 +26,7 @@ class User(Base,Bassmodels):
     # 校验（模型中查询）
     @classmethod
     def check_username(cls,username):  # cls代表类本身
-        return session.query(cls).filter_by(username=username).count()
+        return session.query(cls).filter_by(username=username).first()
 
     # 入库
     @classmethod
@@ -38,7 +38,7 @@ class User(Base,Bassmodels):
 
 
     def __repr__(self):
-        return "User:{}".format(self.username)
+        return "<User:{}>".format(self.username)
 
 
 
@@ -59,3 +59,9 @@ class Post(Base,Bassmodels):
 # 图片实例.user ====>对应的User实例
 # 用户实例.posts=====>对应的Post实例
 
+    @classmethod
+    def app_post(cls,img_url,username):
+        user = User.check_username(username)
+        post = Post(image_url=img_url,user_id=user.id)
+        session.add(post)
+        session.commit()
